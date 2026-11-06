@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.0-rc.2
+
+- Accept local path URL/relative-flag rewrites only when both paths resolve to the same existing directory and all other package metadata matches.
+- Preserve original metadata for unchanged local packages in the approved lock file.
+- Identify the affected package and changed field names when a preview is rejected.
+- Accept equivalent local path URL representations when comparing installed packages with the lock file, while retaining reference and source checks.
+- Correct Packagist installation guides and native worker paths.
+- Add RC1-to-RC2 update guides in German and English.
+- Add focused path-metadata tests and a real Composer scenario with a local Git extension.
+
 ## 0.1.0-rc.1
 
 - Change the banner background to #4d698e.

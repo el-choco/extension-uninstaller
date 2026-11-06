@@ -40,7 +40,10 @@ final class Inventory
             foreach (['version', 'source', 'dist'] as $field) {
                 $a = $package[$field] ?? ''; $b = $actual[$field] ?? '';
                 if ($field === 'version') { $a = ltrim($a, 'v'); $b = ltrim($b, 'v'); }
-                if ($a != $b) throw new \RuntimeException('Installed package differs from lock file: '.$name);
+                if ($a != $b) {
+                    if ($field === 'dist' && is_array($a) && is_array($b) && PlanService::equivalentPathDistribution($a,$b,$base,$base)) continue;
+                    throw new \RuntimeException('Installed package differs from lock file: '.$name.' ('.$field.').');
+                }
             }
         }
     }

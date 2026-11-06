@@ -23,6 +23,83 @@ final class PlanService
         return self::mode($mode) === 'disable' ? 'DISABLE' : 'DELETE';
     }
 
+    public static function changedFields(array $before, array $after, string $prefix = ''): array
+    {
+        $fields = [];
+        foreach (array_unique(array_merge(array_keys($before), array_keys($after))) as $key) {
+            $path = $prefix === '' ? (string) $key : $prefix.'.'.$key;
+            if (!array_key_exists($key, $before) || !array_key_exists($key, $after)) $fields[] = $path;
+            elseif (is_array($before[$key]) && is_array($after[$key])) $fields = array_merge($fields, self::changedFields($before[$key], $after[$key], $path));
+            elseif ($before[$key] != $after[$key]) $fields[] = $path;
+            if (count($fields) >= 24) return array_slice($fields, 0, 24);
+        }
+        return $fields;
+    }
+
+    private static function sourceDirectory($url, string $base): ?string
+    {
+        if (!is_string($url) || $url === '' || strpos($url, "\0") !== false || preg_match('~^[a-z][a-z0-9+.-]*://~i', $url)) return null;
+        $absolute = preg_match('~^(?:/|[A-Za-z]:[\\\\/])~', $url);
+        $path = realpath($absolute ? $url : $base.DIRECTORY_SEPARATOR.$url);
+        if ($path === false || !is_dir($path)) return null;
+        return DIRECTORY_SEPARATOR === '\\' ? strtolower($path) : $path;
+    }
+
+    public static function equivalentPathDistribution(array $before, array $after, string $base, string $draft): bool
+    {
+        if (($before['type'] ?? null) !== 'path' || ($after['type'] ?? null) !== 'path') return false;
+        $oldPath = self::sourceDirectory($before['url'] ?? null, $base);
+        $newPath = self::sourceDirectory($after['url'] ?? null, $draft);
+        if ($oldPath === null || $oldPath !== $newPath) return false;
+        $candidate=$after;$candidate['url']=$before['url'];
+        return $candidate==$before;
+    }
+
+    private static function equivalentPathPackage(array $before, array $after, string $base, string $draft): bool
+    {
+        if (!self::equivalentPathDistribution($before['dist'] ?? [], $after['dist'] ?? [], $base, $draft)) return false;
+        foreach ([$before, $after] as $package) {
+            if (isset($package['transport-options']) && !is_array($package['transport-options'])) return false;
+            if (array_key_exists('relative', $package['transport-options'] ?? []) && !is_bool($package['transport-options']['relative'])) return false;
+        }
+        $candidate = $after;
+        $candidate['dist']['url'] = $before['dist']['url'];
+        if (array_key_exists('relative', $before['transport-options'] ?? [])) $candidate['transport-options']['relative'] = $before['transport-options']['relative'];
+        else {
+            unset($candidate['transport-options']['relative']);
+            if (empty($candidate['transport-options']) && !array_key_exists('transport-options', $before)) unset($candidate['transport-options']);
+        }
+        return $candidate == $before;
+    }
+
+    public static function normalizePathPackages(array $before, array $after, string $base, string $draft): array
+    {
+        $original = [];
+        foreach (array_merge($before['packages'] ?? [], $before['packages-dev'] ?? []) as $package) $original[$package['name']] = $package;
+        foreach (['packages', 'packages-dev'] as $section) {
+            foreach ($after[$section] ?? [] as $index => $package) {
+                $old = $original[$package['name']] ?? null;
+                if ($old && $old != $package && self::equivalentPathPackage($old, $package, $base, $draft)) $after[$section][$index] = $old;
+            }
+        }
+        return $after;
+    }
+
+    private static function saveNormalizedLock(string $beforeFile, string $afterFile, array $raw, array $normalized): void
+    {
+        if ($raw == $normalized) return;
+        $before = json_decode((string) file_get_contents($beforeFile), false, 512, JSON_THROW_ON_ERROR);
+        $after = json_decode((string) file_get_contents($afterFile), false, 512, JSON_THROW_ON_ERROR);
+        $original = [];
+        foreach (array_merge($before->packages ?? [], $before->{'packages-dev'} ?? []) as $package) $original[$package->name] = $package;
+        foreach (['packages', 'packages-dev'] as $section) {
+            foreach ($normalized[$section] ?? [] as $index => $package) {
+                if ($raw[$section][$index] != $package) $after->{$section}[$index] = $original[$package['name']];
+            }
+        }
+        Files::write($afterFile, json_encode($after, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR)."\n");
+    }
+
     public static function changes(array $before, array $after, string $target): array
     {
         $index = static function ($lock) {
@@ -32,7 +109,8 @@ final class PlanService
         };
         $old = $index($before); $new = $index($after); $removed = [];
         foreach ($new as $name => $p) {
-            if (!isset($old[$name]) || $old[$name] != $p) throw new \RuntimeException('The proposal installs or changes another package. No removal was approved.');
+            if (!isset($old[$name])) throw new \RuntimeException('The proposal would install '.$name.'. No removal was approved.');
+            if ($old[$name] != $p) throw new \RuntimeException('The proposal changes '.$name.' ('.($old[$name]['version'] ?? '?').' -> '.($p['version'] ?? '?').'). Changed fields: '.implode(', ', self::changedFields($old[$name], $p)).'. No removal was approved.');
         }
         foreach ($old as $name => $p) {
             if (isset($new[$name])) continue;
@@ -82,7 +160,11 @@ final class PlanService
             if (empty($expected['require-dev'])) unset($expected['require-dev']);
             if (empty($actual['require-dev'])) unset($actual['require-dev']);
             if ($expected != $actual) throw new \RuntimeException('Composer changed unrelated root configuration. Proposal rejected.');
-            $removed = self::changes(Files::json($this->base.'/composer.lock'), Files::json($draft.'/composer.lock'), $package);
+            $beforeLock = Files::json($this->base.'/composer.lock');
+            $rawAfterLock = Files::json($draft.'/composer.lock');
+            $afterLock = self::normalizePathPackages($beforeLock, $rawAfterLock, $this->base, $draft);
+            $removed = self::changes($beforeLock, $afterLock, $package);
+            self::saveNormalizedLock($this->base.'/composer.lock', $draft.'/composer.lock', $rawAfterLock, $afterLock);
         }
         if ($fingerprint !== Inventory::fingerprint($this->base, $enabled)) throw new \RuntimeException('The installation changed while preparing the proposal. Request a fresh preview.');
         $migrationFiles = [];

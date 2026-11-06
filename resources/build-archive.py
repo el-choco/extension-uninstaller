@@ -5,14 +5,14 @@ import sys
 import zipfile
 
 root = Path(__file__).resolve().parent.parent
-version = sys.argv[1] if len(sys.argv) > 1 else '0.1.0-rc.1'
+version = sys.argv[1] if len(sys.argv) > 1 else '0.1.0-rc.2'
 if not re.fullmatch(r'[0-9]+\.[0-9]+\.[0-9]+(?:-[a-z0-9.]+)?', version):
     raise SystemExit('Invalid release version')
 destination = root / 'dist'
 destination.mkdir(exist_ok=True)
 archive = destination / f'extension-uninstaller-{version}.zip'
 allowed_roots = {'src', 'bin', 'js', 'less', 'locale', 'docs', 'resources', 'tests'}
-allowed_files = {'composer.json', 'extend.php', 'README.md', 'INSTALL-DE.md', 'INSTALL-EN.md', 'UPDATE-DE.md', 'CHANGELOG.md', 'LICENSE', '.gitignore', '.gitattributes'}
+allowed_files = {'composer.json', 'extend.php', 'README.md', 'INSTALL-DE.md', 'INSTALL-EN.md', 'UPDATE-DE.md', 'UPDATE-EN.md', 'CHANGELOG.md', 'LICENSE', '.gitignore', '.gitattributes'}
 files = []
 for file in sorted(root.rglob('*')):
     relative = file.relative_to(root)

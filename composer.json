@@ -43,5 +43,11 @@
       "/*.zip",
       "/dist"
     ]
+  },
+  "homepage": "https://github.com/el-choco/extension-uninstaller",
+  "support": {
+    "source": "https://github.com/el-choco/extension-uninstaller",
+    "issues": "https://github.com/el-choco/extension-uninstaller/issues",
+    "docs": "https://github.com/el-choco/extension-uninstaller/blob/main/INSTALL-EN.md"
   }
 }

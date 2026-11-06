@@ -2,7 +2,7 @@
 
 Eigenständiger Deinstallierer für Flarum 1.8 und 2.x. **Die Admin Console wird nicht benötigt.**
 
-**Stand: 0.1.0-rc.1 – Release Candidate, abschließende Live-Prüfungen stehen noch aus.**
+**Stand: 0.1.0-rc.2 – Release Candidate, abschließende Live-Prüfungen stehen noch aus.**
 
 ![Oberfläche mit Beispieldaten](docs/preview.png)
 
@@ -23,6 +23,7 @@ Bestätigung erforderlich. Die Standardauswahl behält Daten.
 - Installierte Erweiterungen suchen, Aktivierung und Abhängigkeiten sehen.
 - Composer-Plan in einem privaten Arbeitsverzeichnis vorbereiten; keine
   Live-Paketänderung während der Vorschau.
+- Gleichwertige relative/absolute Pfadangaben lokaler Pakete erkennen und ihre bisherigen Lock-Metadaten erhalten.
 - Keine zusätzlichen Paketinstallationen oder -aktualisierungen erlauben;
   ungenutzte Bibliotheken im Plan anzeigen, andere Erweiterungen nicht mitentfernen.
 - Zeitlich begrenzte, administratorgebundene Einmalpläne und Schutz gegen doppelte Anfragen.
@@ -50,10 +51,10 @@ nach Beginn einer Änderung, werden weitere Aufträge bis zur manuellen Prüfung
 blockiert. Bei bereits unstartbarem Flarum kann auch der Flarum-Aktionsprozess
 scheitern; dann ist weiterhin das Terminal notwendig.
 
-Erste Version: Linux, Standard-Composer-Verzeichnis `vendor`, MySQL/MariaDB und
+Unterstützte Konfiguration: Linux, Standard-Composer-Verzeichnis `vendor`, MySQL/MariaDB und
 Composer 2.8 oder neuer. Datenbereinigung setzt `mariadb-dump` oder `mysqldump`
 **in der Worker-Umgebung** sowie eine InnoDB-Datenbank voraus. SQLite, externe
-Symlink-Pakete, relative Path-Repositories, installierte Dev-Abhängigkeiten und
+Symlink-Pakete, relative URLs in der Composer-Repository-Konfiguration, installierte Dev-Abhängigkeiten und
 indirekte Paketentfernungen werden in dieser Version nicht unterstützt.
 
 Core, der Deinstallierer selbst und die el-choco Admin Console sind vor Entfernung
@@ -63,15 +64,16 @@ unsere beiden Worker, nicht beliebige fremde Prozesse.
 
 ## Loslegen
 
-- **[Deutsche Installationsanleitung](INSTALL-DE.md)** – CrazyMax und Flarum 1.8 ohne Docker.
+- **[Deutsche Installationsanleitung](INSTALL-DE.md)** – normale Installation und CrazyMax Docker.
 - **[English installation guide](INSTALL-EN.md)**.
-- [Bestehende Alpha-Installation auf rc.1 aktualisieren](UPDATE-DE.md).
+- [Update von RC1 auf RC2, einschließlich früherer lokaler Quellen](UPDATE-DE.md).
+- [English update guide](UPDATE-EN.md).
+- [Release notes RC2](docs/RELEASE-RC2-EN.md).
 - [Testbericht und offene Live-Prüfungen](docs/TEST-REPORT.md).
 - [Technischer Ablauf und Wiederherstellung](docs/ARCHITECTURE.md).
 - [Statische Designvorschau](docs/preview.html) – Beispieldaten, keine Verbindung zum Forum.
 
-Das Paket ist noch nicht auf Packagist veröffentlicht. Die Anleitungen verwenden
-eine lokale Composer-Quelle. Für den ersten Praxistest eine entbehrliche Erweiterung
+Das Paket ist auf [Packagist](https://packagist.org/packages/el-choco/extension-uninstaller) veröffentlicht. Die RC2-Befehle gelten, sobald der Tag `v0.1.0-rc.2` auf Packagist übernommen wurde. Kein lokales Repository ist nötig. Für den ersten Praxistest eine entbehrliche Erweiterung
 auf einer gesicherten Testinstallation wählen: zuerst deaktivieren, dann mit
 erhaltenen Daten entfernen und wieder installieren. Die Purge-Variante erst an
 einer separaten Datenbankkopie prüfen.
@@ -92,6 +94,8 @@ php tests/safety.php /pfad/zum/flarum/vendor/autoload.php
 php tests/security.php /pfad/zum/flarum/vendor/autoload.php
 php tests/coordination.php /pfad/zum/flarum/vendor/autoload.php
 php tests/backup.php /pfad/zum/flarum/vendor/autoload.php
+php tests/path-metadata.php /pfad/zum/flarum/vendor/autoload.php
+php tests/composer-path-preview.php /pfad/zum/flarum/vendor/autoload.php /pfad/zu/composer.phar
 php tests/composer-preview.php /pfad/zum/flarum/vendor/autoload.php /pfad/zu/composer.phar
 ```
 
@@ -103,4 +107,4 @@ Die Entwicklungstests verwenden PHP 8.3/8.4. Die eigentlichen Erweiterungsdateie
 vermeiden PHP-8-Syntax, damit Flarum 1.8 auch unter unterstützten älteren PHP-
 Versionen installierbar bleibt; ein separater PHP-7.4-Lauf wurde lokal nicht ausgeführt.
 
-MIT-Lizenz. Noch kein GitHub-Repository oder Packagist-Paket automatisch angelegt.
+MIT-Lizenz. [Quellcode und Fehlerberichte auf GitHub](https://github.com/el-choco/extension-uninstaller).
