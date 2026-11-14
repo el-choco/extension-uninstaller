@@ -1,6 +1,6 @@
 # Installation from Packagist
 
-For `el-choco/extension-uninstaller` version `0.1.0-rc.2`, once its release tag is available on Packagist.
+For `el-choco/extension-uninstaller` version `0.1.0`, once its release tag is available on Packagist.
 Choose **A** for a normal installation without Docker, or **B** for CrazyMax Docker.
 The Admin Console is optional and has its own independent service.
 
@@ -23,14 +23,14 @@ Requirements: Linux with systemd for these examples, Flarum 1.8 or 2.x, Composer
 
 ### 1. Install the extension
 
-If RC2 is already installed, continue with **step 2**. For RC1 or older versions, use [UPDATE-EN.md](UPDATE-EN.md) first.
+If `0.1.0` is already installed, continue with **step 2**. For older versions, use [UPDATE-EN.md](UPDATE-EN.md) first.
 
 These commands assume a root shell, a forum at `/var/www/flarum` and web user
 `www-data`. Composer and Flarum themselves are run as `www-data`:
 
 ```bash
 cd /var/www/flarum
-runuser -u www-data -- composer require el-choco/extension-uninstaller:"0.1.0-rc.2" --update-no-dev --minimal-changes --no-scripts --no-interaction && \
+runuser -u www-data -- composer require el-choco/extension-uninstaller:"0.1.0" --update-no-dev --minimal-changes --no-scripts --no-interaction && \
 runuser -u www-data -- php flarum extension:enable el-choco-extension-uninstaller && \
 runuser -u www-data -- php flarum cache:clear
 ```
@@ -118,10 +118,10 @@ Adjust the container name and internal path if your image uses different values.
 
 ### 1. Install the extension
 
-If RC2 is already installed, continue with **step 2**. For older versions, see [UPDATE-EN.md](UPDATE-EN.md). Finish active package jobs first.
+If `0.1.0` is already installed, continue with **step 2**. For older versions, see [UPDATE-EN.md](UPDATE-EN.md). Finish active package jobs first.
 
 ```bash
-docker exec --user flarum --env COMPOSER_HOME=/data/extensions/composer-home --workdir /opt/flarum flarum2-flarum-1 composer require el-choco/extension-uninstaller:"0.1.0-rc.2" --update-no-dev --minimal-changes --no-scripts --no-interaction && \
+docker exec --user flarum --env COMPOSER_HOME=/data/extensions/composer-home --workdir /opt/flarum flarum2-flarum-1 composer require el-choco/extension-uninstaller:"0.1.0" --update-no-dev --minimal-changes --no-scripts --no-interaction && \
 docker exec --user flarum flarum2-flarum-1 extension sync && \
 docker exec --user flarum --workdir /opt/flarum flarum2-flarum-1 php flarum extension:enable el-choco-extension-uninstaller && \
 docker exec --user flarum --workdir /opt/flarum flarum2-flarum-1 php flarum cache:clear
@@ -265,5 +265,5 @@ before editing it. Inside a container, use a path from that container's filesyst
 such as `/opt/flarum/workbench/*`.
 
 An unchanged local package can still have a relative URL in its lock metadata.
-RC2 accepts a preview rewrite only when both paths resolve to the same existing
+`0.1.0` accepts a preview rewrite only when both paths resolve to the same existing
 directory and all other package metadata matches. Other changes remain blocked.

@@ -2,7 +2,7 @@
 
 Eigenständiger Deinstallierer für Flarum 1.8 und 2.x. **Die Admin Console wird nicht benötigt.**
 
-**Stand: 0.1.0-rc.2 – Release Candidate, abschließende Live-Prüfungen stehen noch aus.**
+**Stabile Version: 0.1.0.**
 
 ![Oberfläche mit Beispieldaten](docs/preview.png)
 
@@ -66,14 +66,14 @@ unsere beiden Worker, nicht beliebige fremde Prozesse.
 
 - **[Deutsche Installationsanleitung](INSTALL-DE.md)** – normale Installation und CrazyMax Docker.
 - **[English installation guide](INSTALL-EN.md)**.
-- [Update von RC1 auf RC2, einschließlich früherer lokaler Quellen](UPDATE-DE.md).
+- [Update auf 0.1.0, einschließlich früherer lokaler Quellen](UPDATE-DE.md).
 - [English update guide](UPDATE-EN.md).
-- [Release notes RC2](docs/RELEASE-RC2-EN.md).
-- [Testbericht und offene Live-Prüfungen](docs/TEST-REPORT.md).
+- [Änderungen in 0.1.0](CHANGELOG.md#010).
+- [Testbericht zu RC2 und offene Live-Prüfungen](docs/TEST-REPORT.md).
 - [Technischer Ablauf und Wiederherstellung](docs/ARCHITECTURE.md).
 - [Statische Designvorschau](docs/preview.html) – Beispieldaten, keine Verbindung zum Forum.
 
-Das Paket ist auf [Packagist](https://packagist.org/packages/el-choco/extension-uninstaller) veröffentlicht. Die RC2-Befehle gelten, sobald der Tag `v0.1.0-rc.2` auf Packagist übernommen wurde. Kein lokales Repository ist nötig. Für den ersten Praxistest eine entbehrliche Erweiterung
+Das Paket ist auf [Packagist](https://packagist.org/packages/el-choco/extension-uninstaller) veröffentlicht. Für den ersten Praxistest eine entbehrliche Erweiterung
 auf einer gesicherten Testinstallation wählen: zuerst deaktivieren, dann mit
 erhaltenen Daten entfernen und wieder installieren. Die Purge-Variante erst an
 einer separaten Datenbankkopie prüfen.

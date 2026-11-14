@@ -36,14 +36,14 @@ Zum Deaktivieren wird **`DISABLE`**, zum Deinstallieren **`DELETE`** eingegeben.
 - Terminalzugriff zur Einrichtung eines Hintergrunddienstes unter dem Nicht-root-Benutzer des Forums.
 - Für Datenbereinigung: InnoDB-Tabellen sowie `mariadb-dump` oder `mysqldump` in der Worker-Umgebung und ausreichende Exportrechte.
 
-**Aktuelle Version: `0.1.0-rc.2`.** Dies ist ein Release Candidate. Rückmeldungen sind willkommen; Datenbereinigung und Wiederherstellung bitte zunächst an einer separaten Forums-/Datenbankkopie prüfen.
+**Aktuelle Version: `0.1.0`.** Rückmeldungen sind willkommen; Datenbereinigung und Wiederherstellung bitte zunächst an einer separaten Forums-/Datenbankkopie prüfen.
 
 ## Installation: normales Flarum
 
 Die Befehle im Flarum-Verzeichnis **als Forum-/PHP-Benutzer** ausführen, nicht als root:
 
 ```bash
-composer require el-choco/extension-uninstaller:"0.1.0-rc.2" --update-no-dev --minimal-changes --no-scripts --no-interaction
+composer require el-choco/extension-uninstaller:"0.1.0" --update-no-dev --minimal-changes --no-scripts --no-interaction
 php flarum extension:enable el-choco-extension-uninstaller
 php flarum cache:clear
 ```
@@ -65,7 +65,7 @@ systemctl status el-choco-uninstaller-native.service --no-pager -l
 Das folgende Beispiel verwendet den Container **`flarum2-flarum-1`**, das Forum-Verzeichnis **`/opt/flarum`** und den Container-Benutzer **`flarum`**. Diese Angaben bei Bedarf anpassen. Die Befehle auf dem Docker-Host ausführen.
 
 ```bash
-docker exec --user flarum --env COMPOSER_HOME=/data/extensions/composer-home --workdir /opt/flarum flarum2-flarum-1 composer require el-choco/extension-uninstaller:"0.1.0-rc.2" --update-no-dev --minimal-changes --no-scripts --no-interaction && \
+docker exec --user flarum --env COMPOSER_HOME=/data/extensions/composer-home --workdir /opt/flarum flarum2-flarum-1 composer require el-choco/extension-uninstaller:"0.1.0" --update-no-dev --minimal-changes --no-scripts --no-interaction && \
 docker exec --user flarum flarum2-flarum-1 extension sync && \
 docker exec --user flarum --workdir /opt/flarum flarum2-flarum-1 php flarum extension:enable el-choco-extension-uninstaller && \
 docker exec --user flarum --workdir /opt/flarum flarum2-flarum-1 php flarum cache:clear

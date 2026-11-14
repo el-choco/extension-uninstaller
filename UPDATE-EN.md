@@ -1,9 +1,9 @@
-# Update from RC1 to RC2
+# Update to 0.1.0
 
-These commands use `el-choco/extension-uninstaller:0.1.0-rc.2` from Packagist.
-They work after the GitHub tag `v0.1.0-rc.2` has appeared on Packagist.
+These commands use `el-choco/extension-uninstaller:0.1.0` from Packagist.
+They work after the GitHub tag `v0.1.0` has appeared on Packagist.
 
-RC2 includes the confirmed local path-metadata fix. A previously applied RC1
+Version 0.1.0 includes the confirmed local path-metadata fix. A previously applied RC1
 hotfix is replaced by the normal package update; do not reapply it afterward.
 Existing jobs and backups in `storage/extension-uninstaller` are retained.
 
@@ -47,13 +47,13 @@ user, remove that specific global entry too. Do not clear all repositories.
 ### 3. Preview and apply the update
 
 ```bash
-runuser -u www-data -- composer require el-choco/extension-uninstaller:"0.1.0-rc.2" --dry-run --update-no-dev --minimal-changes --no-scripts --no-interaction
+runuser -u www-data -- composer require el-choco/extension-uninstaller:"0.1.0" --dry-run --update-no-dev --minimal-changes --no-scripts --no-interaction
 ```
 
 Stop if unexpected package changes appear. After a successful preview:
 
 ```bash
-runuser -u www-data -- composer require el-choco/extension-uninstaller:"0.1.0-rc.2" --update-no-dev --minimal-changes --no-scripts --no-interaction && \
+runuser -u www-data -- composer require el-choco/extension-uninstaller:"0.1.0" --update-no-dev --minimal-changes --no-scripts --no-interaction && \
 runuser -u www-data -- php flarum cache:clear
 ```
 
@@ -109,13 +109,13 @@ global entry under the same name must also be removed from that global configura
 ### 3. Preview the update
 
 ```bash
-docker exec --user flarum --env COMPOSER_HOME=/data/extensions/composer-home --workdir /opt/flarum flarum2-flarum-1 composer require el-choco/extension-uninstaller:"0.1.0-rc.2" --dry-run --update-no-dev --minimal-changes --no-scripts --no-interaction
+docker exec --user flarum --env COMPOSER_HOME=/data/extensions/composer-home --workdir /opt/flarum flarum2-flarum-1 composer require el-choco/extension-uninstaller:"0.1.0" --dry-run --update-no-dev --minimal-changes --no-scripts --no-interaction
 ```
 
 ### 4. Apply after a successful preview
 
 ```bash
-docker exec --user flarum --env COMPOSER_HOME=/data/extensions/composer-home --workdir /opt/flarum flarum2-flarum-1 composer require el-choco/extension-uninstaller:"0.1.0-rc.2" --update-no-dev --minimal-changes --no-scripts --no-interaction && \
+docker exec --user flarum --env COMPOSER_HOME=/data/extensions/composer-home --workdir /opt/flarum flarum2-flarum-1 composer require el-choco/extension-uninstaller:"0.1.0" --update-no-dev --minimal-changes --no-scripts --no-interaction && \
 docker exec --user flarum flarum2-flarum-1 extension sync && \
 docker exec --user flarum --workdir /opt/flarum flarum2-flarum-1 php flarum cache:clear
 ```
@@ -135,7 +135,7 @@ container or change its volumes for this update.
 
 ## C. Verify
 
-Hard-refresh the browser, check version `0.1.0-rc.2` and the worker connection,
+Hard-refresh the browser, check version `0.1.0` and the worker connection,
 then request a fresh preview. Old plans no longer match the changed package
 state. Review the proposed package list. `DELETE` / `DISABLE` confirmations remain.
 

@@ -55,7 +55,7 @@ el-choco-extension-uninstaller:
     history: "Recent activity"
     no_history: "No jobs yet."
     execution: "Confirmed action"
-    footer: "Standalone extension · Flarum 1.8 / 2.x · No Admin Console dependency · Release Candidate 0.1.0-rc.1"
+    footer: "Standalone extension · Flarum 1.8 / 2.x · No Admin Console dependency · Version 0.1.0"
     request_error: "The request failed."
     retry_same: "Retry the same request"
     status_queued: "Waiting"

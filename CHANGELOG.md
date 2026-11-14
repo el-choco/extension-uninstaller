@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.0
+
+- First stable release for Flarum 1.8 and 2.x.
+- Update the version reported by the admin page and API.
+- Update the German and English installation and update guides.
+
 ## 0.1.0-rc.2
 
 - Accept local path URL/relative-flag rewrites only when both paths resolve to the same existing directory and all other package metadata matches.

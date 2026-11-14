@@ -36,7 +36,7 @@ final class UninstallerController implements RequestHandlerInterface
                 $active = null;
                 foreach ($store->all() as $job) if (in_array($job['status'], ['queued', 'running', 'interrupted'], true)) { $active = $job['id']; break; }
                 return $this->respond(['extensions' => Inventory::extensions($this->paths->base, $enabled), 'history' => $store->history(),
-                    'activeJob' => $active, 'workerSeen' => $store->workerSeen(), 'uid' => RuntimeDiagnostics::uid(), 'version' => '0.1.0-rc.1']);
+                    'activeJob' => $active, 'workerSeen' => $store->workerSeen(), 'uid' => RuntimeDiagnostics::uid(), 'version' => '0.1.0']);
             }
             if ($request->getMethod() !== 'POST') return $this->respond(['message' => 'Method not allowed.'], 405);
             $uid = ($this->identity)();

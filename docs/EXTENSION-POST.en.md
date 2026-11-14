@@ -36,14 +36,14 @@ Type **`DISABLE`** to confirm disabling or **`DELETE`** to confirm uninstalling.
 - Terminal access to configure a background worker running as the forum's non-root PHP user.
 - For data cleanup: InnoDB tables and `mariadb-dump` or `mysqldump` in the worker environment, with sufficient database-export permissions.
 
-**Current release: `0.1.0-rc.2`.** This is a release candidate. Feedback is welcome; test database cleanup and recovery on a separate forum/database copy first.
+**Current release: `0.1.0`.** Feedback is welcome; test database cleanup and recovery on a separate forum/database copy first.
 
 ## Installation: native Flarum
 
 Run from your Flarum directory **as the forum/PHP user**, not root:
 
 ```bash
-composer require el-choco/extension-uninstaller:"0.1.0-rc.2" --update-no-dev --minimal-changes --no-scripts --no-interaction
+composer require el-choco/extension-uninstaller:"0.1.0" --update-no-dev --minimal-changes --no-scripts --no-interaction
 php flarum extension:enable el-choco-extension-uninstaller
 php flarum cache:clear
 ```
@@ -65,7 +65,7 @@ systemctl status el-choco-uninstaller-native.service --no-pager -l
 The following example uses container **`flarum2-flarum-1`**, forum directory **`/opt/flarum`** and container user **`flarum`**. Adjust these values to your setup. Run the commands on the Docker host.
 
 ```bash
-docker exec --user flarum --env COMPOSER_HOME=/data/extensions/composer-home --workdir /opt/flarum flarum2-flarum-1 composer require el-choco/extension-uninstaller:"0.1.0-rc.2" --update-no-dev --minimal-changes --no-scripts --no-interaction && \
+docker exec --user flarum --env COMPOSER_HOME=/data/extensions/composer-home --workdir /opt/flarum flarum2-flarum-1 composer require el-choco/extension-uninstaller:"0.1.0" --update-no-dev --minimal-changes --no-scripts --no-interaction && \
 docker exec --user flarum flarum2-flarum-1 extension sync && \
 docker exec --user flarum --workdir /opt/flarum flarum2-flarum-1 php flarum extension:enable el-choco-extension-uninstaller && \
 docker exec --user flarum --workdir /opt/flarum flarum2-flarum-1 php flarum cache:clear

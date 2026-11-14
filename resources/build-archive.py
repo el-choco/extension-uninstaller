@@ -5,7 +5,7 @@ import sys
 import zipfile
 
 root = Path(__file__).resolve().parent.parent
-version = sys.argv[1] if len(sys.argv) > 1 else '0.1.0-rc.2'
+version = sys.argv[1] if len(sys.argv) > 1 else '0.1.0'
 if not re.fullmatch(r'[0-9]+\.[0-9]+\.[0-9]+(?:-[a-z0-9.]+)?', version):
     raise SystemExit('Invalid release version')
 destination = root / 'dist'
